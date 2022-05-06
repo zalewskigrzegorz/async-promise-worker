@@ -35,8 +35,13 @@ export default function Charts() {
         </div>
         <div className="container">
           <Chart width={600} height={250} series={series}>
-            <Transform method={["rotate"]}>
-              <Bars innerPadding="2%" />
+            <Transform
+              method={[
+                'stack',
+                'rotate'
+              ]}
+            >
+              <Bars combined innerPadding="2%" />
             </Transform>
           </Chart>
         </div>
