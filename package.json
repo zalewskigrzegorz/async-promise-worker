@@ -1,0 +1,22 @@
+{
+  "name": "async-promise-worker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "WTFPL",
+  "dependencies": {
+    "bulma": "^0.9.3",
+    "esbuild": "^0.14.38",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "rumble-charts": "^4.0.0"
+  },
+  "devDependencies": {
+    "chokidar": "^3.5.3",
+    "live-server": "^1.2.2",
+    "prettier": "^2.6.2"
+  },
+  "scripts": {
+    "build": "esbuild src/index.jsx --bundle --minify --sourcemap --outfile=public/bundle.js",
+    "dev": "node serve.js"
+  }
+}
