@@ -37,7 +37,7 @@ export default function Charts() {
       {memory} MB
       <div className="is-flex is-flex-direction-row">
         <div
-          className="is-flex is-flex-direction-column container"
+          className="is-flex is-flex-direction-column container is-hidden-mobile"
           style={{gap: "0.5rem"}}
         >
           <div className="title">Await:</div>
