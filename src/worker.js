@@ -6,6 +6,16 @@ export default () => {
       }, time);
     });
   };
+  const heavyLoad = async (number) => {
+    return new Promise((resolve) => {
+      let result = 0;
+      for (let i = Math.pow(number, 3); i >= 0; i--) {
+        result += Math.atan(i) * Math.tan(i);
+      }
+      resolve(performance.now());
+
+    });
+  };
 
   // eslint-disable-next-line no-restricted-globals
   self.addEventListener(
@@ -15,10 +25,18 @@ export default () => {
       switch (data.cmd) {
         case "start":
           const start = performance.now();
-          emulateLongReq(data.delay).then((results) => {
-            // eslint-disable-next-line no-restricted-globals
-            self.postMessage(results - start);
-          });
+          if (data.heavy) {
+            heavyLoad(data.delay).then((results) => {
+              // eslint-disable-next-line no-restricted-globals
+              self.postMessage(results - start);
+            });
+          } else {
+            emulateLongReq(data.delay).then((results) => {
+              // eslint-disable-next-line no-restricted-globals
+              self.postMessage(results - start);
+            });
+          }
+
           break;
         default:
           // eslint-disable-next-line no-restricted-globals

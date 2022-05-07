@@ -1,10 +1,23 @@
-import React from "react";
-import { Chart, Bars, Transform } from "rumble-charts";
-import { useStateValue } from "../context/StateContext";
+import React, {useEffect, useState} from "react";
+import {Chart, Bars, Transform} from "rumble-charts";
+import {useStateValue} from "../context/StateContext";
 
 export default function Charts() {
-  const [{ awaitResults, promiseResults, taskResults }] =
+  const [{awaitResults, promiseResults, taskResults}] =
     useStateValue();
+  const [memory, setMemory] = useState(0)
+  useEffect(() => {
+    let timer;
+    if (window.performance.memory) {
+      timer = setInterval(() => {
+        setMemory(window.performance.memory.totalJSHeapSize / 1000000)
+      }, 1000)
+    }
+    return () => {
+      clearInterval(timer)
+    };
+  }, []);
+
   const series = [
     {
       data: [awaitResults.first, promiseResults.first, taskResults.first],
@@ -21,10 +34,11 @@ export default function Charts() {
   ];
   return (
     <div className="container">
+      {memory} MB
       <div className="is-flex is-flex-direction-row">
         <div
           className="is-flex is-flex-direction-column container"
-          style={{ gap: "0.5rem" }}
+          style={{gap: "0.5rem"}}
         >
           <div className="title">Await:</div>
           <div className="subtitle"> {Math.round(awaitResults.all)}</div>
@@ -41,43 +55,43 @@ export default function Charts() {
                 'rotate'
               ]}
             >
-              <Bars combined innerPadding="2%" />
+              <Bars combined innerPadding="2%"/>
             </Transform>
           </Chart>
         </div>
       </div>
       <table className="table">
         <thead>
-          <tr>
-            <th></th>
-            <th>First</th>
-            <th>Second</th>
-            <th>Third</th>
-            <th>Total</th>
-          </tr>
+        <tr>
+          <th></th>
+          <th>First</th>
+          <th>Second</th>
+          <th>Third</th>
+          <th>Total</th>
+        </tr>
         </thead>
         <tbody>
-          <tr>
-            <th>Async await</th>
-            <td>{Math.round(awaitResults.first)}</td>
-            <td>{Math.round(awaitResults.second)}</td>
-            <td>{Math.round(awaitResults.third)}</td>
-            <td>{Math.round(awaitResults.all)}</td>
-          </tr>
-          <tr>
-            <th>Promise all</th>
-            <td>{Math.round(promiseResults.first)}</td>
-            <td>{Math.round(promiseResults.second)}</td>
-            <td>{Math.round(promiseResults.third)}</td>
-            <td>{Math.round(promiseResults.all)}</td>
-          </tr>
-          <tr>
-            <th>Web worker</th>
-            <td>{Math.round(taskResults.first)}</td>
-            <td>{Math.round(taskResults.second)}</td>
-            <td>{Math.round(taskResults.third)}</td>
-            <td>{Math.round(taskResults.all)}</td>
-          </tr>
+        <tr>
+          <th>Async await</th>
+          <td>{Math.round(awaitResults.first)}</td>
+          <td>{Math.round(awaitResults.second)}</td>
+          <td>{Math.round(awaitResults.third)}</td>
+          <td>{Math.round(awaitResults.all)}</td>
+        </tr>
+        <tr>
+          <th>Promise all</th>
+          <td>{Math.round(promiseResults.first)}</td>
+          <td>{Math.round(promiseResults.second)}</td>
+          <td>{Math.round(promiseResults.third)}</td>
+          <td>{Math.round(promiseResults.all)}</td>
+        </tr>
+        <tr>
+          <th>Web worker</th>
+          <td>{Math.round(taskResults.first)}</td>
+          <td>{Math.round(taskResults.second)}</td>
+          <td>{Math.round(taskResults.third)}</td>
+          <td>{Math.round(taskResults.all)}</td>
+        </tr>
         </tbody>
       </table>
     </div>

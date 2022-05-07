@@ -4,12 +4,13 @@ import worker from "./worker";
 import WebWorker from "./workerSetup";
 
 import emulateLongReq from "./emulateLongReq";
+import heavyLoad from "./heavyLoad";
 import Charts from "./components/Charts";
 import Form from "./components/Form";
-import { useStateValue } from "./context/StateContext";
+import {useStateValue} from "./context/StateContext";
 
 export default function App() {
-  const [{},dispatch] = useStateValue();
+  const [{}, dispatch] = useStateValue();
 
   const ApiWorker = new WebWorker(worker);
   const ApiWorker2 = new WebWorker(worker);
@@ -52,7 +53,7 @@ export default function App() {
     false
   );
 
-  const runTest = async (firstDelay,secondDelay,thirdDelay) => {
+  const runTest = async (firstDelay, secondDelay, thirdDelay, heavy) => {
     dispatch({
       type: "reset",
     });
@@ -67,13 +68,13 @@ export default function App() {
       time: performance.now(),
     });
 
-    const asyncX = await emulateLongReq(firstDelay);
-    const asyncY = await emulateLongReq(secondDelay);
-    const asyncZ = await emulateLongReq(thirdDelay);
+    const asyncX = heavy ? await heavyLoad(firstDelay) : await emulateLongReq(firstDelay);
+    const asyncY = heavy ? await heavyLoad(secondDelay) : await emulateLongReq(secondDelay);
+    const asyncZ = heavy ? await heavyLoad(thirdDelay) : await emulateLongReq(thirdDelay);
     dispatch({
       type: "setAwaitResults",
       time: performance.now(),
-      values: { first: asyncX, second: asyncY, third: asyncZ },
+      values: {first: asyncX, second: asyncY, third: asyncZ},
     });
 
     //Promise all
@@ -83,14 +84,14 @@ export default function App() {
       time: performance.now(),
     });
     const [promiseX, promiseY, promiseZ] = await Promise.all([
-      emulateLongReq(firstDelay),
-      emulateLongReq(secondDelay),
-      emulateLongReq(thirdDelay),
+      heavy ? heavyLoad(firstDelay) : emulateLongReq(firstDelay),
+      heavy ? heavyLoad(secondDelay) : emulateLongReq(secondDelay),
+      heavy ? heavyLoad(thirdDelay) : emulateLongReq(thirdDelay),
     ]);
     dispatch({
       type: "setPromiseResults",
       time: performance.now(),
-      values: { first: promiseX, second: promiseY, third: promiseZ },
+      values: {first: promiseX, second: promiseY, third: promiseZ},
     });
 
     //Web worker
@@ -100,15 +101,15 @@ export default function App() {
       name: "task",
       time: performance.now(),
     });
-    ApiWorker.postMessage({ cmd: "start", delay: firstDelay });
-    ApiWorker2.postMessage({ cmd: "start", delay: secondDelay });
-    ApiWorker3.postMessage({ cmd: "start", delay: thirdDelay });
+    ApiWorker.postMessage({cmd: "start", delay: firstDelay, heavy});
+    ApiWorker2.postMessage({cmd: "start", delay: secondDelay, heavy});
+    ApiWorker3.postMessage({cmd: "start", delay: thirdDelay, heavy});
   };
   return (
     <>
-      <Form runTests={runTest} />
-      <br />
-      <Charts />
+      <Form runTests={runTest}/>
+      <br/>
+      <Charts/>
     </>
   );
 }

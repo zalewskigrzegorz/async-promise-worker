@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { useStateValue } from "../context/StateContext";
+import React, {useState} from "react";
+import {useStateValue} from "../context/StateContext";
 
-export default function Form({ runTests }) {
-  const [{inProgress }] = useStateValue();
+export default function Form({runTests}) {
+  const [{inProgress}] = useStateValue();
   const [firstDelay, setFirstDelay] = useState(50);
   const [secondDelay, setSecondDelay] = useState(400);
   const [thirdDelay, setThirdDelay] = useState(1200);
@@ -17,7 +17,7 @@ export default function Form({ runTests }) {
               <div className="control">
                 <input
                   className={"input"}
-                  style={{ backgroundColor: "Orange" }}
+                  style={{backgroundColor: "Orange"}}
                   type="number"
                   placeholder="First Delay"
                   value={firstDelay}
@@ -34,7 +34,7 @@ export default function Form({ runTests }) {
               <div className="control">
                 <input
                   className={"input"}
-                  style={{ backgroundColor: "Blue", color: "white" }}
+                  style={{backgroundColor: "Blue", color: "white"}}
                   type="number"
                   placeholder="Second Delay"
                   value={secondDelay}
@@ -51,7 +51,7 @@ export default function Form({ runTests }) {
               <div className="control">
                 <input
                   className={"input"}
-                  style={{ backgroundColor: "violet", color: "white" }}
+                  style={{backgroundColor: "violet", color: "white"}}
                   type="number"
                   placeholder="Third Delay"
                   value={thirdDelay}
@@ -64,15 +64,28 @@ export default function Form({ runTests }) {
           </div>
         </div>
       </fieldset>
-      <div className="control">
+      <div className="buttons">
+
         <button
           className={`button is-primary ${inProgress ? "is-loading" : ""}`}
-          onClick={() => runTests(firstDelay,secondDelay,thirdDelay)}
+          onClick={() => runTests(firstDelay, secondDelay, thirdDelay, false)}
           type="button"
           disabled={inProgress}
         >
-          run test
+          Run simulated test
         </button>
+        <button
+          className={`button is-danger ${inProgress ? "is-loading" : ""}`}
+          onClick={() => runTests(firstDelay, secondDelay, thirdDelay, true)}
+          type="button"
+          disabled={inProgress}
+        >
+          Run heavy LOAD!
+        </button>
+        <p className="help is-danger">Danger This probably will break your browser, please consider to use small
+          numbers. (up to 300)</p>
+
+
       </div>
     </div>
   );

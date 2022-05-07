@@ -1,9 +1,9 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import {StrictMode} from "react";
+import {createRoot} from "react-dom/client";
 
 import App from "./App";
 import React from "react";
-import { StateProvider } from "./context/StateContext";
+import {StateProvider} from "./context/StateContext";
 import initialState from "./context/initialState";
 import reducer from "./context/reducer";
 
@@ -14,7 +14,7 @@ if (rootElement) {
   root.render(
     <StrictMode>
       <StateProvider initialState={initialState} reducer={reducer}>
-        <App />
+        <App/>
       </StateProvider>
     </StrictMode>
   );

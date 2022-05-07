@@ -10,7 +10,7 @@ const reducer = (state, action) => {
     case "setStartTime":
       return {
         ...state,
-        startTimes: { ...state.startTimes, [action.name]: action.time },
+        startTimes: {...state.startTimes, [action.name]: action.time},
       };
     case "setAwaitResults":
       return {
@@ -35,7 +35,7 @@ const reducer = (state, action) => {
     case "setTaskResults":
       const results = {
         ...state,
-        taskResults: { ...state.taskResults, [action.name]: action.newValue },
+        taskResults: {...state.taskResults, [action.name]: action.newValue},
       };
       if (
         results.taskResults.first === 0 ||
