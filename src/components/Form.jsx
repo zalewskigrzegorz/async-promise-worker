@@ -101,7 +101,7 @@ export default function Form({runTests}) {
           Run heavy LOAD!
         </button>
         {(runAsync || runPromise) &&(firstDelay>300 || secondDelay>300 || thirdDelay>300) &&(
-        <p className="help is-danger">Danger This probably will freeze your browser, please consider to use small
+        <p className="help is-danger">Danger heavy load probably will freeze your browser, please consider to use small
           numbers. (up to 300)</p>)}
 
 
