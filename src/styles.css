@@ -4,3 +4,6 @@
     font-family: sans-serif;
     text-align: center;
 }
+label.checkbox input{
+    margin-right: 1rem;
+}

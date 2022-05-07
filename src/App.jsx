@@ -53,7 +53,7 @@ export default function App() {
     false
   );
 
-  const runTest = async (firstDelay, secondDelay, thirdDelay, heavy) => {
+  const runTest = async ({runAsync,runPromise,runWorker},firstDelay, secondDelay, thirdDelay, heavy) => {
     dispatch({
       type: "reset",
     });
@@ -62,48 +62,59 @@ export default function App() {
       newValue: true,
     });
     //async await
-    dispatch({
-      type: "setStartTime",
-      name: "async",
-      time: performance.now(),
-    });
+    if(runAsync){
+      dispatch({
+        type: "setStartTime",
+        name: "async",
+        time: performance.now(),
+      });
 
-    const asyncX = heavy ? await heavyLoad(firstDelay) : await emulateLongReq(firstDelay);
-    const asyncY = heavy ? await heavyLoad(secondDelay) : await emulateLongReq(secondDelay);
-    const asyncZ = heavy ? await heavyLoad(thirdDelay) : await emulateLongReq(thirdDelay);
-    dispatch({
-      type: "setAwaitResults",
-      time: performance.now(),
-      values: {first: asyncX, second: asyncY, third: asyncZ},
-    });
-
+      const asyncX = heavy ? await heavyLoad(firstDelay) : await emulateLongReq(firstDelay);
+      const asyncY = heavy ? await heavyLoad(secondDelay) : await emulateLongReq(secondDelay);
+      const asyncZ = heavy ? await heavyLoad(thirdDelay) : await emulateLongReq(thirdDelay);
+      dispatch({
+        type: "setAwaitResults",
+        time: performance.now(),
+        values: {first: asyncX, second: asyncY, third: asyncZ},
+      });
+    }
     //Promise all
-    dispatch({
-      type: "setStartTime",
-      name: "promise",
-      time: performance.now(),
-    });
-    const [promiseX, promiseY, promiseZ] = await Promise.all([
-      heavy ? heavyLoad(firstDelay) : emulateLongReq(firstDelay),
-      heavy ? heavyLoad(secondDelay) : emulateLongReq(secondDelay),
-      heavy ? heavyLoad(thirdDelay) : emulateLongReq(thirdDelay),
-    ]);
-    dispatch({
-      type: "setPromiseResults",
-      time: performance.now(),
-      values: {first: promiseX, second: promiseY, third: promiseZ},
-    });
+    if(runPromise){
+      dispatch({
+        type: "setStartTime",
+        name: "promise",
+        time: performance.now(),
+      });
+      const [promiseX, promiseY, promiseZ] = await Promise.all([
+        heavy ? heavyLoad(firstDelay) : emulateLongReq(firstDelay),
+        heavy ? heavyLoad(secondDelay) : emulateLongReq(secondDelay),
+        heavy ? heavyLoad(thirdDelay) : emulateLongReq(thirdDelay),
+      ]);
+      dispatch({
+        type: "setPromiseResults",
+        time: performance.now(),
+        values: {first: promiseX, second: promiseY, third: promiseZ},
+      });
+    }
 
     //Web worker
     // "the value in the worker will be lower than performance.now() in the window who spawned that worker."
-    dispatch({
-      type: "setStartTime",
-      name: "task",
-      time: performance.now(),
-    });
-    ApiWorker.postMessage({cmd: "start", delay: firstDelay, heavy});
-    ApiWorker2.postMessage({cmd: "start", delay: secondDelay, heavy});
-    ApiWorker3.postMessage({cmd: "start", delay: thirdDelay, heavy});
+    if(runWorker){
+      dispatch({
+        type: "setStartTime",
+        name: "task",
+        time: performance.now(),
+      });
+      ApiWorker.postMessage({cmd: "start", delay: firstDelay, heavy});
+      ApiWorker2.postMessage({cmd: "start", delay: secondDelay, heavy});
+      ApiWorker3.postMessage({cmd: "start", delay: thirdDelay, heavy});
+    }else{
+      dispatch({
+        type: "setInProgress",
+        newValue: false,
+      });
+    }
+
   };
   return (
     <>

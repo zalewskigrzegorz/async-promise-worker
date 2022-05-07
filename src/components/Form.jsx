@@ -6,6 +6,9 @@ export default function Form({runTests}) {
   const [firstDelay, setFirstDelay] = useState(50);
   const [secondDelay, setSecondDelay] = useState(400);
   const [thirdDelay, setThirdDelay] = useState(1200);
+  const [runAsync, setRunAsync] = useState(true);
+  const [runPromise, setRunPromise] = useState(true);
+  const [runWorker, setRunWorker] = useState(true);
 
   return (
     <div className="container box">
@@ -64,11 +67,26 @@ export default function Form({runTests}) {
           </div>
         </div>
       </fieldset>
+      <fieldset className='level'
+      >
+        <label className="checkbox">
+          <input type="checkbox" checked={runAsync} onChange={(e) => setRunAsync(e.target.checked)}/>
+          Await
+        </label>
+        <label className="checkbox">
+          <input type="checkbox" checked={runPromise} onChange={(e) => setRunPromise(e.target.checked)}/>
+          Promise all
+        </label>
+        <label className="checkbox">
+          <input type="checkbox" checked={runWorker} onChange={(e) => setRunWorker(e.target.checked)}/>
+          Web worker
+        </label>
+      </fieldset>
       <div className="buttons">
 
         <button
           className={`button is-primary ${inProgress ? "is-loading" : ""}`}
-          onClick={() => runTests(firstDelay, secondDelay, thirdDelay, false)}
+          onClick={() => runTests({runAsync,runPromise,runWorker},firstDelay, secondDelay, thirdDelay, false)}
           type="button"
           disabled={inProgress}
         >
@@ -76,7 +94,7 @@ export default function Form({runTests}) {
         </button>
         <button
           className={`button is-danger ${inProgress ? "is-loading" : ""}`}
-          onClick={() => runTests(firstDelay, secondDelay, thirdDelay, true)}
+          onClick={() => runTests({runAsync,runPromise,runWorker},firstDelay, secondDelay, thirdDelay, true)}
           type="button"
           disabled={inProgress}
         >
